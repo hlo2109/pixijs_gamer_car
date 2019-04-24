@@ -121,7 +121,7 @@ function gameLoop(delta) {
             totalPasaCars++; 
             puntos += (5 + puntoAdicional);
             document.querySelector(".puntos").innerHTML = puntos;
-            if(totalPasaCars==5){
+            if(totalPasaCars==30){
                 nivel++;                
                 document.querySelector(".nivel").innerHTML = nivel;
                 velocidaEstandarEnemigo += 0.5;
