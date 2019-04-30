@@ -8,3 +8,7 @@ https://www.youtube.com/user/hlo2109
 
 Sígueme en facebook todos los días actualizo contenido:
 https://www.facebook.com/hlo2189/
+
+
+Probar última versión del juego 
+https://hlo2109.github.io/pixijs_gamer_car/
