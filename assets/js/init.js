@@ -35,9 +35,18 @@ let totalPasaCars = 0;
 let nivel = 0;
 let puntos = 0;
 let puntoAdicional = 0;
+// Sonidos
+let SoundFondo;
+let SoundExplosion;
+let SoundPrincipal;
+
 
 loader.add("pista", "assets/img/pista.jpg")
-    .add("cars", "assets/img/cars.png");
+    .add("cars", "assets/img/cars.png")
+    .add("soundFondo", "assets/sound/fondo.mp3")
+    .add("SoundCar", "assets/sound/car.mp3")
+    .add("SoundExplosion", "assets/sound/explosion.mp3")
+    ;
 loader.load();
 loader.onError.add((e, d) => {
     console.log(e, d);
@@ -49,10 +58,19 @@ loader.onLoad.add((e, p) => {
 loader.onComplete.add((loader, resources) => {
     Background = resources["pista"].texture;
     Cars = resources["cars"].texture;    
+    SoundFondo = resources["soundFondo"].sound;
+    SoundFondo.volume = 0.5;
+    SoundFondo.loop = 1;
+    SoundFondo.play();
+    SoundPrincipal = resources["SoundCar"].sound;
+    SoundPrincipal.loop = 1;
+    SoundPrincipal.speed = 0.3;
+    SoundExplosion = resources["SoundExplosion"].sound;
 })
 
 
 function init(){
+    SoundFondo.pause();
     enemigos = []; 
     velocidaEstandarEnemigo = 1;
     velocidadEnemigo = 1;
@@ -107,7 +125,7 @@ function setup(delta) {
         activeVelocidad = false;        
     }
     state = play;
-
+    SoundPrincipal.play();
     game.ticker.add(delta => gameLoop(delta));
 }
 
@@ -121,7 +139,7 @@ function gameLoop(delta) {
             totalPasaCars++; 
             puntos += (5 + puntoAdicional);
             document.querySelector(".puntos").innerHTML = puntos;
-            if(totalPasaCars==30){
+            if(totalPasaCars==5){
                 nivel++;                
                 document.querySelector(".nivel").innerHTML = nivel;
                 velocidaEstandarEnemigo += 0.5;
@@ -144,9 +162,11 @@ function play(delta) {
     if(activeVelocidad){
         puntoAdicional = 20;
         velocidadEnemigo = velocidaEstandarEnemigo + 10; 
+        SoundPrincipal.speed = 0.5;
     } else{
         puntoAdicional = 0;
         velocidadEnemigo = velocidaEstandarEnemigo; 
+        SoundPrincipal.speed = 0.3;
     }
 
 
@@ -169,10 +189,13 @@ function iniciaGame(){
 }
 
 function gameOver(){ 
+    SoundPrincipal.stop();    
+    SoundExplosion.play();
     game.stop();    
     document.querySelector(".pantalla").classList.remove("active");
     document.querySelector(".pantalla h1").innerHTML = "Intentalo de nuevo";
     setTimeout(() => {
+        SoundFondo.play();
         document.querySelector("canvas").remove();
     }, 1000);
 }
