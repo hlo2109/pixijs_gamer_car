@@ -21,6 +21,13 @@
         </div>
         <div class="puntos">0</div>
         <div class="nivel">0</div>
+        <div class="flechas">
+            <button ontouchstart="fleleft()" ontouchend="fleleftOut()" class="l"><i class="fas fa-arrow-left"></i></button>
+            <button ontouchstart="fleDown()" ontouchend="fleDownOut()" class="dl"><i class="fas fa-arrow-down"></i></button>
+            <button ontouchstart="fleDown()" ontouchend="fleDownOut()" class="dr"><i class="fas fa-arrow-down"></i></button>
+            <button ontouchstart="fleRight()" ontouchend="fleRightOut()" class="r"><i class="fas fa-arrow-right"></i></button>
+        </div>
+
         <div id="juego"></div>
     </div>
     <script src="assets/js/pixi.min.js"></script>

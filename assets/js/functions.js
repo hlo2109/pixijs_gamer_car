@@ -1,8 +1,8 @@
 function jugador() {
   var anchoPersonaje = 36;
   var altoPersonaje = 66;
-  var posx = (renderer.width / 2) - (anchoPersonaje / 2);
-  var posy = (renderer.height - altoPersonaje) - 20;
+  var posx = (width / 2) - (anchoPersonaje / 2);
+  var posy = (height - altoPersonaje) - 20;
   let texture = util.frame(Cars, 0, 0, anchoPersonaje, altoPersonaje)
   var img = util.sprite(texture);
   img.x = posx;
@@ -29,7 +29,7 @@ function boots() {
     posvy = ultimoEnemigo.y - (altoPersonaje * 3);
   }
 
-  var anchopista = renderer.width - (Laterales * 2);
+  var anchopista = width - (Laterales * 2);
   var posx = randomInt(0, anchopista - anchoPersonaje);
   posx += Laterales;
   var rand = randomInt(0, 10);
@@ -39,6 +39,33 @@ function boots() {
   enemigos[consecutivoEnemigos].x = posx;
   enemigos[consecutivoEnemigos].vy = posvy;
   return enemigos[consecutivoEnemigos];
+}
+
+function fleleft(){
+  principal.vx = -velocidadPrincipal;
+  principal.vy = 0;
+  PosicionFinal = Laterales;
+}
+function fleleftOut(){
+  principal.vx = 0;
+  principal.vy = 0;
+}
+
+function fleRight(){
+  principal.vx = velocidadPrincipal;
+  principal.vy = 0;
+  PosicionFinal = PosicionFinalAncho;
+}
+function fleRightOut(){
+  principal.vx = 0;
+  principal.vy = 0;
+}
+
+function fleDown(){
+  activeVelocidad = true;
+}
+function fleDownOut(){
+  activeVelocidad = false;
 }
 
 function randomInt(min, max) {

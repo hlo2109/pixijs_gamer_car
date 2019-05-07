@@ -78,4 +78,41 @@ canvas{ margin: auto; display: block; }
     z-index: 20;
     padding: 5px;
     font-size: 60px;
+} 
+.flechas{ 
+    position: absolute; 
+    bottom: 0px; 
+    left: 0px; 
+    width: 100%; 
+    z-index: 10;
+    text-align: left;
+    display: none;
+}
+.flechas button{ 
+    background: #fff;
+    margin: 0px; 
+    border:0px;
+    outline: none;
+    font-size: 30px;
+    border-radius: 100px;
+    padding: 10px;    
+    
+}
+.flechas button.l{ margin-left: 20px; }
+.flechas button.r{ float: right; margin-right: 20px; }
+.flechas button.dl{ 
+    position: absolute; 
+    left: 40px;
+    bottom: 100%;
+}
+.flechas button.dr{ 
+    position: absolute; 
+    right: 40px;
+    bottom: 100%;
+}
+@media(max-width:999px){
+    .container .pantalla .cont h1{ font-size: 40px; }
+    .container .pantalla .cont button{ font-size: 70px; }
+    .container .nivel{ width: 50px; height: 50px; line-height: 50px; font-size: 30px; bottom: 120px; }
+    .flechas.active{ display: inline-block; }
 }

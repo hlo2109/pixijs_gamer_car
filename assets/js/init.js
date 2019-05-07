@@ -6,14 +6,19 @@ if (!PIXI.utils.isWebGLSupported()) {
 PIXI.utils.sayHello(type)
 
 var heightWindow = window.innerHeight;
+var widthWindow = window.innerWidth;
+if(widthWindow>700){
+    widthWindow=700;
+}
 var width = 700;
-
+var height = 1080; 
 let Application = PIXI.Application,
     loader = PIXI.loader,
     resources = PIXI.loader.resources,
     Text = PIXI.Text,
     TextStyle = PIXI.TextStyle,
     Graphics = PIXI.Graphics,
+    Container = PIXI.Container;
     renderer = PIXI.autoDetectRenderer(width, heightWindow);
 let util = new SpriteUtilities(PIXI);
 
@@ -39,14 +44,17 @@ let puntoAdicional = 0;
 let SoundFondo;
 let SoundExplosion;
 let SoundPrincipal;
+// Nuevos
+let Content;
+let volumenVelocidad=0;
+let pasaVolumen=0;
 
 
 loader.add("pista", "assets/img/pista.jpg")
     .add("cars", "assets/img/cars.png")
     .add("soundFondo", "assets/sound/fondo.mp3")
     .add("SoundCar", "assets/sound/car.mp3")
-    .add("SoundExplosion", "assets/sound/explosion.mp3")
-    ;
+    .add("SoundExplosion", "assets/sound/explosion.mp3");
 loader.load();
 loader.onError.add((e, d) => {
     console.log(e, d);
@@ -81,6 +89,8 @@ function init(){
     nivel = 0;
     puntos = 0;
     puntoAdicional = 0;
+    volumenVelocidad = 0;
+    pasaVolumen = 0;
 
     game = new Application({ width: width, height: heightWindow });
     game.renderer.backgroundColor = 0x061639;
@@ -90,47 +100,49 @@ function init(){
 }
 
 function setup(delta) {
-    Fondo = util.tilingSprite(Background, renderer.width, renderer.height, 0, 0);
+    Content = new Container();
+    Fondo = util.tilingSprite(Background, width, height, 0, 0);
     Fondo.tileY = 0;
-    game.stage.addChild(Fondo);
+    Content.addChild(Fondo);
 
     principal = jugador();
-    game.stage.addChild(principal);
+    Content.addChild(principal);
 
     let left = keyboard("ArrowLeft"),
         right = keyboard("ArrowRight");
     down = keyboard("ArrowDown");
     left.press = () => {
-        principal.vx = -velocidadPrincipal;
-        principal.vy = 0;
-        PosicionFinal = Laterales;
+        fleleft()
     }
     left.release = () => {
-        principal.vx = 0;
-        principal.vy = 0;
+        fleleftOut()
     }
     right.press = () => {
-        principal.vx = velocidadPrincipal;
-        principal.vy = 0;
-        PosicionFinal = PosicionFinalAncho;
+        fleRight();
     }
     right.release = () => {
-        principal.vx = 0;
-        principal.vy = 0;
+        fleRightOut();
     }
     down.press = () => {
-        activeVelocidad = true;        
+        fleDown();        
     }
     down.release = () => {
-        activeVelocidad = false;        
+        fleDownOut();        
     }
     state = play;
     SoundPrincipal.play();
+    
+    Content.scale.x = widthWindow/Background.width;
+    Content.scale.y = heightWindow/Background.height;
+  
+
+    game.stage.addChild(Content);
+
     game.ticker.add(delta => gameLoop(delta));
 }
 
 function gameLoop(delta) { 
-    game.stage.addChild(boots()); 
+    Content.addChild(boots()); 
     for (let index = 1; index < enemigos.length; index++) {
         enemigos[index].vy = enemigos[index].vy + velocidadEnemigo;
         enemigos[index].y = enemigos[index].vy;
@@ -157,16 +169,22 @@ function play(delta) {
         principal.y += principal.vy;
     } else {
         principal.x = PosicionFinal;
+    }        
+    if((nivel%5)==0 && nivel>0 && nivel!=pasaVolumen){
+        pasaVolumen=nivel;
+        volumenVelocidad = volumenVelocidad + 0.1;
+        if(volumenVelocidad>=1){
+            volumenVelocidad = 0.9;
+        }
     }
-
     if(activeVelocidad){
         puntoAdicional = 20;
         velocidadEnemigo = velocidaEstandarEnemigo + 10; 
-        SoundPrincipal.speed = 0.5;
+        SoundPrincipal.speed = volumenVelocidad + 0.1;
     } else{
         puntoAdicional = 0;
         velocidadEnemigo = velocidaEstandarEnemigo; 
-        SoundPrincipal.speed = 0.3;
+        SoundPrincipal.speed = volumenVelocidad;
     }
 
 
@@ -185,6 +203,7 @@ function iniciaGame(){
     document.querySelector(".puntos").innerHTML = 0;
     document.querySelector(".nivel").innerHTML = 0;
     document.querySelector(".pantalla").classList.add("active");
+    document.querySelector(".flechas").classList.add("active");
     init();
 }
 
@@ -193,6 +212,7 @@ function gameOver(){
     SoundExplosion.play();
     game.stop();    
     document.querySelector(".pantalla").classList.remove("active");
+    document.querySelector(".flechas").classList.remove("active");
     document.querySelector(".pantalla h1").innerHTML = "Intentalo de nuevo";
     setTimeout(() => {
         SoundFondo.play();
